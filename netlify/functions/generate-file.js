@@ -38,7 +38,7 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            body: "File sent successfully!"
+            body: ""
         };
     } catch (error) {
         return {
