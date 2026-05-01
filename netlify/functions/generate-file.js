@@ -2,7 +2,13 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 exports.handler = async (event) => {
-    const { type, content, channelID, token } = event.queryStringParameters || {};
+    const params = event.queryStringParameters || {};
+    
+    // Decoding content here helps BDFD data pass through correctly
+    const type = params.type;
+    const channelID = params.channelID;
+    const token = params.token;
+    const content = params.content ? decodeURIComponent(params.content) : null;
 
     if (!type || !content || !channelID || !token) {
         return {
@@ -11,17 +17,14 @@ exports.handler = async (event) => {
         };
     }
 
-    const filename = `file.${type}`;
-    const buffer = Buffer.from(content, 'utf-8');
-
-    // Create the "Multipart" form data Discord requires for files
-    const form = new FormData();
-    form.append('file', buffer, filename);
-    form.append('payload_json', JSON.stringify({
-        content: `Here is your generated **.${type}** file!`
-    }));
-
     try {
+        const filename = `file.${type.toLowerCase()}`;
+        const buffer = Buffer.from(content, 'utf-8');
+
+        const form = new FormData();
+        // Append ONLY the file
+        form.append('file', buffer, filename);
+
         await axios.post(
             `https://discord.com/api/v10/channels/${channelID}/messages`,
             form,
@@ -35,10 +38,9 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            body: "File sent to Discord successfully!"
+            body: "File sent successfully!"
         };
     } catch (error) {
-        console.error(error.response?.data || error);
         return {
             statusCode: 500,
             body: `Discord Error: ${JSON.stringify(error.response?.data || error.message)}`
