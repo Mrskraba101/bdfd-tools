@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BDFD Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #080808;
+      --white: #f0f0f0;
+      --grey: #1a1a1a;
+      --mid: #2e2e2e;
+      --border: #333;
+      --accent: #ffffff;
+      --dim: #888;
+      --font-mono: 'Space Mono', monospace;
+      --font-display: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-display);
+      overflow-x: hidden;
+    }
+
+    /* ── LOADER ── */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 32px;
+    }
+
+    .loader-logo {
+      display: flex; align-items: center; gap: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+
+    .loader-icon {
+      width: 64px; height: 64px;
+      position: relative;
+    }
+
+    .loader-icon svg {
+      width: 100%; height: 100%;
+    }
+
+    .loader-wordmark {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .loader-wordmark span {
+      color: var(--dim);
+      font-weight: 400;
+    }
+
+    .loader-bar-wrap {
+      width: 240px; height: 2px;
+      background: #1a1a1a;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.4s ease 0.6s forwards;
+    }
+
+    .loader-bar {
+      height: 100%;
+      background: #fff;
+      width: 0%;
+      animation: loadBar 1.8s cubic-bezier(0.4,0,0.2,1) 0.8s forwards;
+    }
+
+    .loader-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: #444;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.4s ease 0.9s forwards;
+    }
+
+    @keyframes loadBar {
+      0%   { width: 0% }
+      30%  { width: 35% }
+      60%  { width: 65% }
+      85%  { width: 88% }
+      100% { width: 100% }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; pointer-events: none; }
+    }
+
+    #loader.done {
+      animation: fadeOut 0.5s ease forwards;
+    }
+
+    /* ── NOISE TEXTURE overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid #111;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+    }
+
+    .nav-logo-text {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo-text span { color: #555; font-weight: 400; }
+
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #666;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .nav-badge {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: #888;
+      border: 1px solid #2a2a2a;
+      padding: 4px 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .page.active { display: block; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 80px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      padding: 60px 24px;
+    }
+
+    /* Big diagonal split */
+    .hero-split {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .hero-split::before {
+      content: '';
+      position: absolute;
+      top: -10%; left: -5%;
+      width: 55%; height: 130%;
+      background: #fff;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+      opacity: 0.035;
+    }
+
+    /* Grid lines */
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      max-width: 780px;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: #333;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: #fff;
+      margin-bottom: 32px;
+    }
+
+    .hero-title .inverted {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 0 8px;
+      line-height: 1.05;
+    }
+
+    .hero-sub {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 400;
+      color: #555;
+      max-width: 500px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #666;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: 1px solid #222;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover { color: #fff; border-color: #555; }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: #333;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      z-index: 2;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, #333, transparent);
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid #111;
+      border-bottom: 1px solid #111;
+    }
+
+    .stat-cell {
+      padding: 40px 48px;
+      border-right: 1px solid #111;
+    }
+
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #444;
+    }
+
+    /* ── TOOLS PAGE ── */
+    .page-header {
+      padding: 64px 48px 40px;
+      border-bottom: 1px solid #111;
+    }
+
+    .page-header-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .page-header-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .tools-grid {
+      padding: 48px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1px;
+      background: #111;
+    }
+
+    .tool-card {
+      background: var(--black);
+      padding: 40px;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card:hover { background: #0d0d0d; }
+
+    .tool-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0%;
+      background: #fff;
+      transition: height 0.3s ease;
+    }
+
+    .tool-card:hover::before { height: 100%; }
+
+    .tool-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .tool-name {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .tool-name code {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+    }
+
+    .tool-desc {
+      color: #555;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .tool-chip-row {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #555;
+      border: 1px solid #222;
+      padding: 4px 10px;
+    }
+
+    .chip.white { color: #ccc; border-color: #3a3a3a; }
+
+    .tool-arrow {
+      position: absolute; bottom: 32px; right: 32px;
+      font-size: 1.2rem; color: #333;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .tool-card:hover .tool-arrow { color: #fff; transform: translate(4px, -4px); }
+
+    /* ── TOOL DETAIL PAGE ── */
+    .tool-detail-header {
+      padding: 64px 48px 48px;
+      border-bottom: 1px solid #111;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #555;
+      background: none; border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover { color: #fff; }
+
+    .detail-content {
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 64px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .detail-content { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .param-section { margin-bottom: 40px; }
+
+    .param-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #111;
+    }
+
+    .param-row {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid #0e0e0e;
+      align-items: flex-start;
+    }
+
+    .param-name {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #ccc;
+      min-width: 110px;
+      flex-shrink: 0;
+    }
+
+    .param-desc {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .param-desc em {
+      font-style: normal;
+      color: #888;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    /* Preview panel */
+    .preview-panel {
+      position: sticky;
+      top: 100px;
+    }
+
+    .preview-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .preview-box {
+      background: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      padding: 24px;
+    }
+
+    .preview-url {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #555;
+      word-break: break-all;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .preview-url strong { color: #888; }
+
+    .build-link-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #444;
+      margin-bottom: 12px;
+      margin-top: 24px;
+    }
+
+    .builder-inputs { display: flex; flex-direction: column; gap: 8px; }
+
+    .builder-input {
+      background: #0a0a0a;
+      border: 1px solid #1c1c1c;
+      color: #ccc;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .builder-input:focus { border-color: #333; }
+    .builder-input::placeholder { color: #333; }
+
+    .builder-generate {
+      margin-top: 12px;
+      width: 100%;
+      background: #fff;
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .builder-generate:hover { background: #ddd; }
+
+    .generated-url {
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: #666;
+      word-break: break-all;
+      line-height: 1.7;
+      padding: 12px;
+      background: #060606;
+      border: 1px solid #131313;
+      display: none;
+    }
+
+    .generated-url.show { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid #111;
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-left {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    .footer-right {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #333;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+    .fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+    /* ── BDFD LOGO SVG ── */
+    .bdfd-logo-svg {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .stat-cell { padding: 24px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .stat-cell { border-right: none; border-bottom: 1px solid #111; }
+      .page-header, .tools-grid { padding: 32px 24px; }
+      .detail-content { padding: 32px 24px; }
+      .tool-detail-header { padding: 40px 24px 32px; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <div class="loader-logo">
+    <!-- BDFD Logo -->
+    <div class="loader-icon">
+      <svg class="bdfd-logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="none"/>
+        <!-- Bot head shape -->
+        <rect x="10" y="16" width="44" height="32" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
+        <!-- Antenna -->
+        <line x1="32" y1="16" x2="32" y2="8" stroke="#fff" stroke-width="2"/>
+        <circle cx="32" cy="6" r="3" fill="#fff"/>
+        <!-- Eyes -->
+        <rect x="18" y="26" width="8" height="8" rx="1" fill="#fff"/>
+        <rect x="38" y="26" width="8" height="8" rx="1" fill="#fff"/>
+        <!-- Mouth -->
+        <rect x="20" y="38" width="24" height="3" rx="1" fill="#fff"/>
+        <!-- Side ears -->
+        <rect x="4" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2"/>
+        <rect x="54" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="loader-wordmark">BDFD<span>tools</span></div>
+  </div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar"></div>
+  </div>
+  <div class="loader-label">Initializing tools</div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;text-decoration:none;">
+    <div class="nav-logo-icon">
+      <svg class="bdfd-logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="16" width="44" height="32" rx="4" fill="none" stroke="#fff" stroke-width="2.5"/>
+        <line x1="32" y1="16" x2="32" y2="8" stroke="#fff" stroke-width="2.5"/>
+        <circle cx="32" cy="6" r="3" fill="#fff"/>
+        <rect x="18" y="26" width="8" height="8" rx="1" fill="#fff"/>
+        <rect x="38" y="26" width="8" height="8" rx="1" fill="#fff"/>
+        <rect x="20" y="38" width="24" height="3" rx="1" fill="#fff"/>
+        <rect x="4" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2.5"/>
+        <rect x="54" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2.5"/>
+      </svg>
+    </div>
+    <div class="nav-logo-text">BDFD<span>tools</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" href="#">Home</a></li>
+    <li><a onclick="showPage('tools')" href="#">Tools</a></li>
+    <li><a href="https://botdesigner.io" target="_blank">BDFD</a></li>
+  </ul>
+  <div class="nav-badge">Beta</div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-split"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow fade-in">Bot Designer for Discord · Utilities</div>
+
+      <h1 class="hero-title fade-in">
+        Build<br>
+        <span class="inverted">better</span><br>
+        bots.
+      </h1>
+
+      <p class="hero-sub fade-in">
+        Tools, generators, and utilities built for the BDFD community.
+        No fluff — just what you need.
+      </p>
+
+      <div class="hero-actions fade-in">
+        <button class="btn-primary" onclick="showPage('tools')">Browse Tools</button>
+        <button class="btn-secondary" onclick="showPage('tools')">View ?card →</button>
+      </div>
+    </div>
+
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-cell">
+      <div class="stat-num">01</div>
+      <div class="stat-label">Tools available</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Combinations</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">0$</div>
+      <div class="stat-label">Cost</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">BDFD Tools &nbsp;/&nbsp; Community Project</div>
+    <div class="footer-right">Not affiliated with Bot Designer for Discord</div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: TOOLS LIST
+══════════════════════════════════════════ -->
+<div id="page-tools" class="page">
+  <div class="page-header">
+    <div class="page-header-eyebrow">Utility Belt</div>
+    <h2 class="page-header-title">Tools</h2>
+  </div>
+
+  <div class="tools-grid">
+    <div class="tool-card" onclick="showPage('card-tool')">
+      <div class="tool-tag">Image Generator · v1</div>
+      <div class="tool-name"><code>?card</code></div>
+      <div class="tool-desc">
+        Generate a customizable Discord profile card image with stats, badges, themes, and more. All params optional.
+      </div>
+      <div class="tool-chip-row">
+        <span class="chip white">themes</span>
+        <span class="chip white">badges</span>
+        <span class="chip white">XP/level</span>
+        <span class="chip white">custom bg</span>
+        <span class="chip">3 layouts</span>
+        <span class="chip">10+ badges</span>
+      </div>
+      <div class="tool-arrow">↗</div>
+    </div>
+
+    <!-- Placeholder for future tools -->
+    <div class="tool-card" style="opacity:0.3; cursor:default; pointer-events:none;">
+      <div class="tool-tag">Coming Soon</div>
+      <div class="tool-name" style="font-size:1.2rem; color:#333;">More tools on the way</div>
+      <div class="tool-desc">Have an idea? Contribute to the project.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">BDFD Tools</div>
+    <div class="footer-right">Not affiliated with Bot Designer for Discord</div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE: ?CARD TOOL DETAIL
+══════════════════════════════════════════ -->
+<div id="page-card-tool" class="page">
+  <div class="tool-detail-header">
+    <div>
+      <button class="back-btn" onclick="showPage('tools')">← Back to tools</button>
+      <div class="page-header-eyebrow">Image Generator</div>
+      <h2 class="page-header-title" style="font-size: clamp(2rem,5vw,4rem);">?card</h2>
+    </div>
+    <div style="text-align:right;">
+      <div class="tool-tag" style="margin-bottom:8px;">All params optional</div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:#555;">Use %23 instead of # in URLs</div>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <!-- LEFT: Params -->
+    <div>
+
+      <!-- Identity -->
+      <div class="param-section">
+        <div class="param-section-title">Identity</div>
+
+        <div class="param-row">
+          <div class="param-name">username</div>
+          <div class="param-desc">Display name shown on the card. <em>Default: "User"</em></div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">user</div>
+          <div class="param-desc">Numeric Discord user ID shown as <em>#id</em></div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">avatar</div>
+          <div class="param-desc">HTTPS URL for the avatar image. Used as fallback if another source fails.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">title</div>
+          <div class="param-desc">Small label beneath the name. <em>e.g. Admin, Mod</em></div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">bio</div>
+          <div class="param-desc">Short bio text. Max 120 chars, displays across 2 lines.</div>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="param-section">
+        <div class="param-section-title">Appearance</div>
+
+        <div class="param-row">
+          <div class="param-name">theme</div>
+          <div class="param-desc">Card color theme. <em>dark · cyberpunk · pastel · minimal</em> (default: dark)</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">color</div>
+          <div class="param-desc">Hex accent color. Use <em>%23</em> instead of <em>#</em> in the URL. Accepts <em>#rgb</em> or <em>#rrggbb</em>.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">bg</div>
+          <div class="param-desc">URL of a custom background image.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">overlay</div>
+          <div class="param-desc">Overlay on top of background. <em>dark · light · none</em> (default: dark)</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">blur</div>
+          <div class="param-desc">Background blur amount. <em>0–20</em> (default: 0)</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">glow</div>
+          <div class="param-desc">Enable glow effect around accent. <em>true / false</em> (default: false)</div>
+        </div>
+      </div>
+
+      <!-- Layout -->
+      <div class="param-section">
+        <div class="param-section-title">Layout</div>
+
+        <div class="param-row">
+          <div class="param-name">style</div>
+          <div class="param-desc">
+            Card layout/size.<br>
+            <em>full</em> — 620×200px (default)<br>
+            <em>compact</em> — 420×130px<br>
+            <em>banner</em> — 680×260px
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="param-section">
+        <div class="param-section-title">Stats (optional)</div>
+
+        <div class="param-row">
+          <div class="param-name">level</div>
+          <div class="param-desc">Enables the XP progress bar when set.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">xp</div>
+          <div class="param-desc">Current XP value for the progress bar.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">xpmax</div>
+          <div class="param-desc">Max XP. If omitted, bar shows at ~65%.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">rank</div>
+          <div class="param-desc">Shown as <em>#n</em> on the card.</div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">messages</div>
+          <div class="param-desc">Message count, auto-formatted. <em>1200 → 1.2K</em></div>
+        </div>
+        <div class="param-row">
+          <div class="param-name">streak</div>
+          <div class="param-desc">Activity streak. <em>e.g. 30d</em></div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="param-section">
+        <div class="param-section-title">Badges</div>
+
+        <div class="param-row">
+          <div class="param-name">badges</div>
+          <div class="param-desc">
+            Comma-separated list, max 8.<br>
+            <em>vip, mod, booster, dev, staff, bot, early, verified, premium, partner</em>
+          </div>
+        </div>
+
+        <div class="tool-chip-row" style="margin-top:16px;">
+          <span class="chip white">vip</span>
+          <span class="chip white">mod</span>
+          <span class="chip white">booster</span>
+          <span class="chip white">dev</span>
+          <span class="chip white">staff</span>
+          <span class="chip white">bot</span>
+          <span class="chip white">early</span>
+          <span class="chip white">verified</span>
+          <span class="chip white">premium</span>
+          <span class="chip white">partner</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Preview / Builder -->
+    <div class="preview-panel">
+      <div class="preview-label">URL Structure</div>
+      <div class="preview-box">
+        <div class="preview-url">
+          <strong>Base URL:</strong><br>
+          your-api.com/card<br><br>
+          <strong>Example:</strong><br>
+          /card?username=Ash&level=5&xp=340&xpmax=500&badges=dev,verified&theme=dark&glow=true&color=%2300ffcc
+        </div>
+      </div>
+
+      <div class="build-link-label">Quick Builder</div>
+      <div class="builder-inputs">
+        <input class="builder-input" id="b-username" placeholder="username" />
+        <input class="builder-input" id="b-user" placeholder="user (numeric ID)" />
+        <input class="builder-input" id="b-title" placeholder="title (e.g. Admin)" />
+        <input class="builder-input" id="b-bio" placeholder="bio (max 120 chars)" />
+        <input class="builder-input" id="b-level" placeholder="level" />
+        <input class="builder-input" id="b-xp" placeholder="xp" />
+        <input class="builder-input" id="b-xpmax" placeholder="xpmax" />
+        <input class="builder-input" id="b-rank" placeholder="rank" />
+        <input class="builder-input" id="b-badges" placeholder="badges (comma separated)" />
+        <input class="builder-input" id="b-theme" placeholder="theme: dark/cyberpunk/pastel/minimal" />
+        <input class="builder-input" id="b-color" placeholder="color (hex, e.g. #ff0099)" />
+        <input class="builder-input" id="b-style" placeholder="style: full/compact/banner" />
+        <input class="builder-input" id="b-blur" placeholder="blur (0-20)" />
+        <input class="builder-input" id="b-glow" placeholder="glow: true/false" />
+        <input class="builder-input" id="b-baseurl" placeholder="Base URL (e.g. your-api.com/card)" />
+        <button class="builder-generate" onclick="buildURL()">Generate URL</button>
+        <div class="generated-url" id="generated-url"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">BDFD Tools · ?card</div>
+    <div class="footer-right">All params optional</div>
+  </footer>
+</div>
+
+<script>
+  // ── Page routing ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── Loader ──
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      loader.classList.add('done');
+      setTimeout(() => loader.remove(), 600);
+    }, 2800);
+  });
+
+  // ── URL Builder ──
+  function buildURL() {
+    const base = document.getElementById('b-baseurl').value.trim() || 'your-api.com/card';
+    const params = [
+      ['username', 'b-username'],
+      ['user', 'b-user'],
+      ['title', 'b-title'],
+      ['bio', 'b-bio'],
+      ['level', 'b-level'],
+      ['xp', 'b-xp'],
+      ['xpmax', 'b-xpmax'],
+      ['rank', 'b-rank'],
+      ['badges', 'b-badges'],
+      ['theme', 'b-theme'],
+      ['color', 'b-color'],
+      ['style', 'b-style'],
+      ['blur', 'b-blur'],
+      ['glow', 'b-glow'],
+    ];
+
+    const parts = [];
+    params.forEach(([key, id]) => {
+      const val = document.getElementById(id).value.trim();
+      if (val) {
+        let encoded = encodeURIComponent(val).replace(/%23/g, '%2523');
+        // For color, replace # with %23
+        if (key === 'color') {
+          encoded = val.replace('#', '%23');
+        } else {
+          encoded = encodeURIComponent(val);
+        }
+        parts.push(`${key}=${encoded}`);
+      }
+    });
+
+    const url = `${base}${parts.length ? '?' + parts.join('&') : ''}`;
+    const el = document.getElementById('generated-url');
+    el.textContent = url;
+    el.classList.add('show');
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(url).catch(() => {});
+  }
+</script>
+</body>
+</html>
