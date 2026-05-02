@@ -20,15 +20,8 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--black);
-      color: var(--white);
-      font-family: var(--font-display);
-      overflow-x: hidden;
-    }
+    body { background: var(--black); color: var(--white); font-family: var(--font-display); overflow-x: hidden; }
 
     /* ── LOADER ── */
     #loader {
@@ -38,667 +31,222 @@
       align-items: center; justify-content: center;
       gap: 32px;
     }
+    .loader-logo { display: flex; align-items: center; gap: 16px; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; }
+    .loader-icon { width: 64px; height: 64px; position: relative; }
+    .loader-icon svg { width: 100%; height: 100%; }
+    .loader-wordmark { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+    .loader-wordmark span { color: var(--dim); font-weight: 400; }
+    .loader-bar-wrap { width: 240px; height: 2px; background: #1a1a1a; overflow: hidden; opacity: 0; animation: fadeUp 0.4s ease 0.6s forwards; }
+    .loader-bar { height: 100%; background: #fff; width: 0%; animation: loadBar 1.8s cubic-bezier(0.4,0,0.2,1) 0.8s forwards; }
+    .loader-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em; color: #444; text-transform: uppercase; opacity: 0; animation: fadeUp 0.4s ease 0.9s forwards; }
 
-    .loader-logo {
-      display: flex; align-items: center; gap: 16px;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.3s forwards;
-    }
+    @keyframes loadBar { 0%{width:0%} 30%{width:35%} 60%{width:65%} 85%{width:88%} 100%{width:100%} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeOut { to{opacity:0;pointer-events:none;} }
+    #loader.done { animation: fadeOut 0.5s ease forwards; }
 
-    .loader-icon {
-      width: 64px; height: 64px;
-      position: relative;
-    }
-
-    .loader-icon svg {
-      width: 100%; height: 100%;
-    }
-
-    .loader-wordmark {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-    }
-
-    .loader-wordmark span {
-      color: var(--dim);
-      font-weight: 400;
-    }
-
-    .loader-bar-wrap {
-      width: 240px; height: 2px;
-      background: #1a1a1a;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeUp 0.4s ease 0.6s forwards;
-    }
-
-    .loader-bar {
-      height: 100%;
-      background: #fff;
-      width: 0%;
-      animation: loadBar 1.8s cubic-bezier(0.4,0,0.2,1) 0.8s forwards;
-    }
-
-    .loader-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      color: #444;
-      text-transform: uppercase;
-      opacity: 0;
-      animation: fadeUp 0.4s ease 0.9s forwards;
-    }
-
-    @keyframes loadBar {
-      0%   { width: 0% }
-      30%  { width: 35% }
-      60%  { width: 65% }
-      85%  { width: 88% }
-      100% { width: 100% }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; pointer-events: none; }
-    }
-
-    #loader.done {
-      animation: fadeOut 0.5s ease forwards;
-    }
-
-    /* ── NOISE TEXTURE overlay ── */
+    /* ── NOISE ── */
     body::before {
-      content: '';
-      position: fixed; inset: 0;
-      z-index: 1;
-      pointer-events: none;
+      content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      background-size: 180px 180px;
-      opacity: 0.35;
+      background-size: 180px 180px; opacity: 0.35;
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex; align-items: center;
-      justify-content: space-between;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 20px 48px;
       border-bottom: 1px solid #111;
       background: rgba(8,8,8,0.85);
       backdrop-filter: blur(16px);
     }
-
-    .nav-logo {
-      display: flex; align-items: center; gap: 12px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .nav-logo-icon {
-      width: 32px; height: 32px;
-    }
-
-    .nav-logo-text {
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: #fff;
-      letter-spacing: -0.02em;
-    }
-
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
+    .nav-logo-icon { width: 32px; height: 32px; }
+    .nav-logo-text { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: #fff; letter-spacing: -0.02em; }
     .nav-logo-text span { color: #555; font-weight: 400; }
-
-    .nav-links {
-      display: flex; gap: 32px; list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #666;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #666; text-decoration: none; transition: color 0.2s; cursor: pointer; }
     .nav-links a:hover { color: #fff; }
-
-    .nav-badge {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      color: #888;
-      border: 1px solid #2a2a2a;
-      padding: 4px 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
+    .nav-badge { font-family: var(--font-mono); font-size: 0.6rem; color: #888; border: 1px solid #2a2a2a; padding: 4px 10px; letter-spacing: 0.15em; text-transform: uppercase; }
 
     /* ── PAGES ── */
-    .page {
-      display: none;
-      min-height: 100vh;
-      padding-top: 80px;
-    }
-
+    .page { display: none; min-height: 100vh; padding-top: 80px; }
     .page.active { display: block; }
 
     /* ── HERO ── */
-    .hero {
-      position: relative;
-      min-height: calc(100vh - 80px);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      overflow: hidden;
-      padding: 60px 24px;
-    }
-
-    /* Big diagonal split */
-    .hero-split {
-      position: absolute; inset: 0;
-      overflow: hidden;
-      z-index: 0;
-    }
-
-    .hero-split::before {
-      content: '';
-      position: absolute;
-      top: -10%; left: -5%;
-      width: 55%; height: 130%;
-      background: #fff;
-      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
-      opacity: 0.035;
-    }
-
-    /* Grid lines */
-    .hero-grid {
-      position: absolute; inset: 0; z-index: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    .hero-content {
-      position: relative; z-index: 2;
-      text-align: center;
-      max-width: 780px;
-    }
-
-    .hero-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 24px;
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-    }
-
-    .hero-eyebrow::before, .hero-eyebrow::after {
-      content: '';
-      width: 40px; height: 1px;
-      background: #333;
-    }
-
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(3rem, 8vw, 6.5rem);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.04em;
-      color: #fff;
-      margin-bottom: 32px;
-    }
-
-    .hero-title .inverted {
-      display: inline-block;
-      background: #fff;
-      color: #000;
-      padding: 0 8px;
-      line-height: 1.05;
-    }
-
-    .hero-sub {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 400;
-      color: #555;
-      max-width: 500px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
-    }
-
-    .hero-actions {
-      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: #fff;
-      color: #000;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 14px 28px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: #666;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 14px 28px;
-      border: 1px solid #222;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
+    .hero { position: relative; min-height: calc(100vh - 80px); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 60px 24px; }
+    .hero-split { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+    .hero-split::before { content: ''; position: absolute; top: -10%; left: -5%; width: 55%; height: 130%; background: #fff; clip-path: polygon(0 0,100% 0,80% 100%,0 100%); opacity: 0.035; }
+    .hero-grid { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px); background-size: 60px 60px; }
+    .hero-content { position: relative; z-index: 2; text-align: center; max-width: 780px; }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: #555; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 12px; }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; width: 40px; height: 1px; background: #333; }
+    .hero-title { font-family: var(--font-display); font-size: clamp(3rem,8vw,6.5rem); font-weight: 800; line-height: 0.92; letter-spacing: -0.04em; color: #fff; margin-bottom: 32px; }
+    .hero-title .inverted { display: inline-block; background: #fff; color: #000; padding: 0 8px; line-height: 1.05; }
+    .hero-sub { font-family: var(--font-display); font-size: 1rem; font-weight: 400; color: #555; max-width: 500px; margin: 0 auto 48px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: #fff; color: #000; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: transform 0.15s,box-shadow 0.15s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.15); }
+    .btn-secondary { background: transparent; color: #666; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; border: 1px solid #222; cursor: pointer; transition: color 0.2s,border-color 0.2s; }
     .btn-secondary:hover { color: #fff; border-color: #555; }
+    .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: #333; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; z-index: 2; animation: bounce 2s ease-in-out infinite; }
+    .scroll-hint::after { content: ''; width: 1px; height: 40px; background: linear-gradient(to bottom,#333,transparent); }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
 
-    /* Scroll hint */
-    .scroll-hint {
-      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: #333;
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      z-index: 2;
-      animation: bounce 2s ease-in-out infinite;
-    }
-
-    .scroll-hint::after {
-      content: '';
-      width: 1px; height: 40px;
-      background: linear-gradient(to bottom, #333, transparent);
-    }
-
-    @keyframes bounce {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50%      { transform: translateX(-50%) translateY(8px); }
-    }
-
-    /* ── STATS ROW ── */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid #111;
-      border-bottom: 1px solid #111;
-    }
-
-    .stat-cell {
-      padding: 40px 48px;
-      border-right: 1px solid #111;
-    }
-
+    /* ── STATS ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid #111; border-bottom: 1px solid #111; }
+    .stat-cell { padding: 40px 48px; border-right: 1px solid #111; }
     .stat-cell:last-child { border-right: none; }
+    .stat-num { font-family: var(--font-display); font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: #444; }
 
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: 2.8rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
+    /* ── PAGE HEADER ── */
+    .page-header { padding: 64px 48px 40px; border-bottom: 1px solid #111; }
+    .page-header-eyebrow { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+    .page-header-title { font-family: var(--font-display); font-size: clamp(2rem,4vw,3.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
 
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #444;
-    }
-
-    /* ── TOOLS PAGE ── */
-    .page-header {
-      padding: 64px 48px 40px;
-      border-bottom: 1px solid #111;
-    }
-
-    .page-header-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 12px;
-    }
-
-    .page-header-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1;
-    }
-
-    .tools-grid {
-      padding: 48px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 1px;
-      background: #111;
-    }
-
-    .tool-card {
-      background: var(--black);
-      padding: 40px;
-      cursor: pointer;
-      transition: background 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
+    /* ── TOOLS GRID ── */
+    .tools-grid { padding: 48px; display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 1px; background: #111; }
+    .tool-card { background: var(--black); padding: 40px; cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden; }
     .tool-card:hover { background: #0d0d0d; }
-
-    .tool-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0;
-      width: 3px; height: 0%;
-      background: #fff;
-      transition: height 0.3s ease;
-    }
-
+    .tool-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0%; background: #fff; transition: height 0.3s ease; }
     .tool-card:hover::before { height: 100%; }
-
-    .tool-tag {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #444;
-      margin-bottom: 16px;
-    }
-
-    .tool-name {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-      margin-bottom: 12px;
-    }
-
-    .tool-name code {
-      font-family: var(--font-mono);
-      font-size: 1.4rem;
-    }
-
-    .tool-desc {
-      color: #555;
-      font-size: 0.9rem;
-      line-height: 1.65;
-      margin-bottom: 28px;
-    }
-
-    .tool-chip-row {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
-
-    .chip {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #555;
-      border: 1px solid #222;
-      padding: 4px 10px;
-    }
-
+    .tool-tag { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #444; margin-bottom: 16px; }
+    .tool-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; margin-bottom: 12px; }
+    .tool-name code { font-family: var(--font-mono); font-size: 1.4rem; }
+    .tool-desc { color: #555; font-size: 0.9rem; line-height: 1.65; margin-bottom: 28px; }
+    .tool-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #555; border: 1px solid #222; padding: 4px 10px; }
     .chip.white { color: #ccc; border-color: #3a3a3a; }
+    .tool-arrow { position: absolute; bottom: 32px; right: 32px; font-size: 1.2rem; color: #333; transition: color 0.2s,transform 0.2s; }
+    .tool-card:hover .tool-arrow { color: #fff; transform: translate(4px,-4px); }
 
-    .tool-arrow {
-      position: absolute; bottom: 32px; right: 32px;
-      font-size: 1.2rem; color: #333;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .tool-card:hover .tool-arrow { color: #fff; transform: translate(4px, -4px); }
-
-    /* ── TOOL DETAIL PAGE ── */
-    .tool-detail-header {
-      padding: 64px 48px 48px;
-      border-bottom: 1px solid #111;
-      display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .back-btn {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #555;
-      background: none; border: none;
-      cursor: pointer;
-      padding: 0;
-      margin-bottom: 20px;
-      display: flex; align-items: center; gap: 8px;
-      transition: color 0.2s;
-    }
-
+    /* ── TOOL DETAIL ── */
+    .tool-detail-header { padding: 64px 48px 48px; border-bottom: 1px solid #111; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .back-btn { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #555; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
     .back-btn:hover { color: #fff; }
-
-    .detail-content {
-      padding: 48px;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 64px;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .detail-content { grid-template-columns: 1fr; gap: 40px; }
-    }
-
+    .detail-content { padding: 48px; display: grid; grid-template-columns: 1fr 340px; gap: 64px; align-items: start; }
+    @media(max-width:900px){ .detail-content{grid-template-columns:1fr;gap:40px;} }
     .param-section { margin-bottom: 40px; }
-
-    .param-section-title {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #111;
-    }
-
-    .param-row {
-      display: flex;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid #0e0e0e;
-      align-items: flex-start;
-    }
-
-    .param-name {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: #ccc;
-      min-width: 110px;
-      flex-shrink: 0;
-    }
-
-    .param-desc {
-      font-size: 0.82rem;
-      color: #555;
-      line-height: 1.55;
-      flex: 1;
-    }
-
-    .param-desc em {
-      font-style: normal;
-      color: #888;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-    }
-
-    /* Preview panel */
-    .preview-panel {
-      position: sticky;
-      top: 100px;
-    }
-
-    .preview-label {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #444;
-      margin-bottom: 16px;
-    }
-
-    .preview-box {
-      background: #0d0d0d;
-      border: 1px solid #1a1a1a;
-      padding: 24px;
-    }
-
-    .preview-url {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: #555;
-      word-break: break-all;
-      line-height: 1.8;
-      margin-bottom: 20px;
-    }
-
+    .param-section-title { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: #555; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #111; }
+    .param-row { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid #0e0e0e; align-items: flex-start; }
+    .param-name { font-family: var(--font-mono); font-size: 0.78rem; color: #ccc; min-width: 110px; flex-shrink: 0; }
+    .param-desc { font-size: 0.82rem; color: #555; line-height: 1.55; flex: 1; }
+    .param-desc em { font-style: normal; color: #888; font-family: var(--font-mono); font-size: 0.72rem; }
+    .preview-panel { position: sticky; top: 100px; }
+    .preview-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: #444; margin-bottom: 16px; }
+    .preview-box { background: #0d0d0d; border: 1px solid #1a1a1a; padding: 24px; }
+    .preview-url { font-family: var(--font-mono); font-size: 0.68rem; color: #555; word-break: break-all; line-height: 1.8; margin-bottom: 20px; }
     .preview-url strong { color: #888; }
-
-    .build-link-label {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #444;
-      margin-bottom: 12px;
-      margin-top: 24px;
-    }
-
+    .build-link-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: #444; margin-bottom: 12px; margin-top: 24px; }
     .builder-inputs { display: flex; flex-direction: column; gap: 8px; }
-
-    .builder-input {
-      background: #0a0a0a;
-      border: 1px solid #1c1c1c;
-      color: #ccc;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 10px 12px;
-      outline: none;
-      transition: border-color 0.2s;
-      width: 100%;
-    }
-
+    .builder-input { background: #0a0a0a; border: 1px solid #1c1c1c; color: #ccc; font-family: var(--font-mono); font-size: 0.72rem; padding: 10px 12px; outline: none; transition: border-color 0.2s; width: 100%; }
     .builder-input:focus { border-color: #333; }
     .builder-input::placeholder { color: #333; }
-
-    .builder-generate {
-      margin-top: 12px;
-      width: 100%;
-      background: #fff;
-      color: #000;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 12px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
+    .builder-generate { margin-top: 12px; width: 100%; background: #fff; color: #000; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px; border: none; cursor: pointer; transition: background 0.15s; }
     .builder-generate:hover { background: #ddd; }
-
-    .generated-url {
-      margin-top: 12px;
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      color: #666;
-      word-break: break-all;
-      line-height: 1.7;
-      padding: 12px;
-      background: #060606;
-      border: 1px solid #131313;
-      display: none;
-    }
-
+    .generated-url { margin-top: 12px; font-family: var(--font-mono); font-size: 0.65rem; color: #666; word-break: break-all; line-height: 1.7; padding: 12px; background: #060606; border: 1px solid #131313; display: none; }
     .generated-url.show { display: block; }
 
+    /* ── PERMISSION CALCULATOR ── */
+    .perm-layout { padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media(max-width:900px){ .perm-layout{grid-template-columns:1fr;gap:32px;} }
+    .perm-categories { display: flex; flex-direction: column; gap: 1px; background: #111; }
+    .perm-category { background: var(--black); }
+    .perm-cat-header { padding: 16px 20px; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: #444; border-bottom: 1px solid #0d0d0d; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: color 0.2s; user-select: none; }
+    .perm-cat-header:hover { color: #888; }
+    .perm-cat-body { display: none; }
+    .perm-cat-body.open { display: block; }
+    .perm-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid #0a0a0a; cursor: pointer; transition: background 0.15s; gap: 12px; }
+    .perm-item:hover { background: #0c0c0c; }
+    .perm-item-left { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .perm-item-name { font-family: var(--font-mono); font-size: 0.72rem; color: #bbb; }
+    .perm-item-desc { font-size: 0.72rem; color: #3a3a3a; line-height: 1.4; }
+    .perm-toggle { width: 36px; height: 20px; background: #1a1a1a; border: 1px solid #222; border-radius: 2px; position: relative; flex-shrink: 0; transition: background 0.2s, border-color 0.2s; }
+    .perm-toggle.on { background: #fff; border-color: #fff; }
+    .perm-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: #333; transition: left 0.2s, background 0.2s; border-radius: 1px; }
+    .perm-toggle.on::after { left: 18px; background: #000; }
+    .perm-result-panel { position: sticky; top: 100px; }
+    .perm-value-box { background: #0d0d0d; border: 1px solid #1a1a1a; padding: 24px; margin-bottom: 16px; }
+    .perm-value-num { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; word-break: break-all; }
+    .perm-value-hex { font-family: var(--font-mono); font-size: 0.75rem; color: #444; margin-top: 8px; }
+    .perm-invite-box { background: #060606; border: 1px solid #131313; padding: 16px; margin-top: 16px; }
+    .perm-invite-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #333; margin-bottom: 10px; }
+    .perm-invite-url { font-family: var(--font-mono); font-size: 0.62rem; color: #555; word-break: break-all; line-height: 1.7; }
+    .perm-invite-url strong { color: #777; }
+    .perm-client-input { background: #0a0a0a; border: 1px solid #1c1c1c; color: #ccc; font-family: var(--font-mono); font-size: 0.72rem; padding: 10px 12px; outline: none; transition: border-color 0.2s; width: 100%; margin-bottom: 8px; }
+    .perm-client-input:focus { border-color: #333; }
+    .perm-client-input::placeholder { color: #333; }
+    .perm-copy-btn { width: 100%; background: #fff; color: #000; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px; border: none; cursor: pointer; transition: background 0.15s; margin-top: 8px; }
+    .perm-copy-btn:hover { background: #ddd; }
+    .perm-select-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .perm-sel-btn { flex: 1; background: transparent; color: #555; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px; border: 1px solid #1a1a1a; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+    .perm-sel-btn:hover { color: #ccc; border-color: #333; }
+    .perm-badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; min-height: 28px; }
+    .perm-active-chip { font-family: var(--font-mono); font-size: 0.58rem; color: #888; border: 1px solid #1e1e1e; padding: 3px 8px; letter-spacing: 0.08em; }
+    .copy-feedback { font-family: var(--font-mono); font-size: 0.6rem; color: #555; text-align: center; margin-top: 8px; height: 16px; transition: opacity 0.3s; opacity: 0; }
+    .copy-feedback.show { opacity: 1; }
+
+    /* ── BDFD ERROR CHECKER ── */
+    .checker-layout { padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media(max-width:900px){ .checker-layout{grid-template-columns:1fr;gap:32px;} }
+    .code-editor-wrap { display: flex; flex-direction: column; gap: 12px; }
+    .code-editor-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: #444; }
+    .code-editor { background: #050505; border: 1px solid #1a1a1a; color: #ccc; font-family: var(--font-mono); font-size: 0.8rem; padding: 20px; outline: none; resize: vertical; min-height: 280px; line-height: 1.7; tab-size: 2; transition: border-color 0.2s; width: 100%; }
+    .code-editor:focus { border-color: #2a2a2a; }
+    .code-editor::placeholder { color: #222; }
+    .check-btn { background: #fff; color: #000; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.15s; }
+    .check-btn:hover { background: #ddd; }
+    .clear-btn { background: transparent; color: #444; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 20px; border: 1px solid #1a1a1a; cursor: pointer; transition: color 0.2s; }
+    .clear-btn:hover { color: #888; }
+    .btn-row { display: flex; gap: 8px; }
+    .results-panel { display: flex; flex-direction: column; gap: 12px; }
+    .result-status { padding: 16px 20px; border: 1px solid #111; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; display: flex; align-items: center; gap: 12px; }
+    .result-status.ok { border-color: #1a2e1a; background: #080f08; color: #4a8c4a; }
+    .result-status.error { border-color: #2e1a1a; background: #0f0808; color: #8c4a4a; }
+    .result-status.idle { border-color: #111; background: #0a0a0a; color: #333; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .status-dot.ok { background: #4a8c4a; }
+    .status-dot.error { background: #8c4a4a; }
+    .status-dot.idle { background: #222; }
+    .error-list { display: flex; flex-direction: column; gap: 1px; background: #0e0e0e; }
+    .error-item { background: #080808; padding: 16px 20px; border-left: 2px solid #1a1a1a; }
+    .error-item.err-bracket { border-left-color: #8c4a4a; }
+    .error-item.err-arg { border-left-color: #8c6a2a; }
+    .error-item.err-func { border-left-color: #2a5a8c; }
+    .error-item.err-warn { border-left-color: #555; }
+    .error-item-type { font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: #444; margin-bottom: 6px; }
+    .error-item.err-bracket .error-item-type { color: #8c4a4a; }
+    .error-item.err-arg .error-item-type { color: #8c6a2a; }
+    .error-item.err-func .error-item-type { color: #4a6a8c; }
+    .error-item-msg { font-size: 0.82rem; color: #888; line-height: 1.5; }
+    .error-item-detail { font-family: var(--font-mono); font-size: 0.68rem; color: #3a3a3a; margin-top: 6px; line-height: 1.5; }
+    .no-errors-box { padding: 32px 20px; text-align: center; border: 1px solid #0e0e0e; }
+    .no-errors-box .check-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .no-errors-box p { font-family: var(--font-mono); font-size: 0.7rem; color: #4a8c4a; letter-spacing: 0.1em; }
+    .checker-info { background: #050505; border: 1px solid #111; padding: 20px; }
+    .checker-info-title { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #333; margin-bottom: 12px; }
+    .checker-info-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #0a0a0a; }
+    .checker-info-row:last-child { border-bottom: none; }
+    .checker-badge { width: 8px; height: 8px; flex-shrink: 0; }
+    .checker-info-text { font-size: 0.78rem; color: #444; }
+    .line-num { font-family: var(--font-mono); font-size: 0.65rem; color: #555; margin-right: 4px; }
+
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid #111;
-      padding: 40px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
+    footer { border-top: 1px solid #111; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-left { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: #333; }
+    .footer-right { font-family: var(--font-mono); font-size: 0.62rem; color: #333; }
 
-    .footer-left {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #333;
-    }
+    .fade-in { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s ease forwards; }
+    .fade-in:nth-child(1){animation-delay:0.1s} .fade-in:nth-child(2){animation-delay:0.2s} .fade-in:nth-child(3){animation-delay:0.3s} .fade-in:nth-child(4){animation-delay:0.4s}
+    .bdfd-logo-svg { display: block; }
 
-    .footer-right {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      color: #333;
-    }
-
-    /* ── ANIMATIONS ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.6s ease forwards;
-    }
-
-    .fade-in:nth-child(1) { animation-delay: 0.1s; }
-    .fade-in:nth-child(2) { animation-delay: 0.2s; }
-    .fade-in:nth-child(3) { animation-delay: 0.3s; }
-    .fade-in:nth-child(4) { animation-delay: 0.4s; }
-
-    /* ── BDFD LOGO SVG ── */
-    .bdfd-logo-svg {
-      display: block;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      .stat-cell { padding: 24px; }
-      .stats-row { grid-template-columns: 1fr; }
-      .stat-cell { border-right: none; border-bottom: 1px solid #111; }
-      .page-header, .tools-grid { padding: 32px 24px; }
-      .detail-content { padding: 32px 24px; }
-      .tool-detail-header { padding: 40px 24px 32px; }
-      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    @media(max-width:768px){
+      nav{padding:16px 24px;} .nav-links{display:none;}
+      .stat-cell{padding:24px;} .stats-row{grid-template-columns:1fr;} .stat-cell{border-right:none;border-bottom:1px solid #111;}
+      .page-header,.tools-grid{padding:32px 24px;} .detail-content,.perm-layout,.checker-layout{padding:32px 24px;}
+      .tool-detail-header{padding:40px 24px 32px;} footer{padding:32px 24px;flex-direction:column;align-items:flex-start;}
     }
   </style>
 </head>
@@ -707,36 +255,27 @@
 <!-- ══ LOADER ══ -->
 <div id="loader">
   <div class="loader-logo">
-    <!-- BDFD Logo -->
     <div class="loader-icon">
       <svg class="bdfd-logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="64" height="64" fill="none"/>
-        <!-- Bot head shape -->
         <rect x="10" y="16" width="44" height="32" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-        <!-- Antenna -->
         <line x1="32" y1="16" x2="32" y2="8" stroke="#fff" stroke-width="2"/>
         <circle cx="32" cy="6" r="3" fill="#fff"/>
-        <!-- Eyes -->
         <rect x="18" y="26" width="8" height="8" rx="1" fill="#fff"/>
         <rect x="38" y="26" width="8" height="8" rx="1" fill="#fff"/>
-        <!-- Mouth -->
         <rect x="20" y="38" width="24" height="3" rx="1" fill="#fff"/>
-        <!-- Side ears -->
         <rect x="4" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2"/>
         <rect x="54" y="24" width="6" height="12" rx="2" fill="none" stroke="#fff" stroke-width="2"/>
       </svg>
     </div>
     <div class="loader-wordmark">BDFD<span>tools</span></div>
   </div>
-  <div class="loader-bar-wrap">
-    <div class="loader-bar"></div>
-  </div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
   <div class="loader-label">Initializing tools</div>
 </div>
 
 <!-- ══ NAV ══ -->
 <nav>
-  <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;text-decoration:none;">
+  <a class="nav-logo" onclick="showPage('home')">
     <div class="nav-logo-icon">
       <svg class="bdfd-logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="10" y="16" width="44" height="32" rx="4" fill="none" stroke="#fff" stroke-width="2.5"/>
@@ -752,84 +291,52 @@
     <div class="nav-logo-text">BDFD<span>tools</span></div>
   </a>
   <ul class="nav-links">
-    <li><a onclick="showPage('home')" href="#">Home</a></li>
-    <li><a onclick="showPage('tools')" href="#">Tools</a></li>
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('tools')">Tools</a></li>
     <li><a href="https://botdesignerdiscord.com/" target="_blank">BDFD</a></li>
   </ul>
   <div class="nav-badge">Beta</div>
 </nav>
 
-<!-- ══════════════════════════════════════════
-     PAGE: HOME
-══════════════════════════════════════════ -->
+<!-- ══ PAGE: HOME ══ -->
 <div id="page-home" class="page active">
-
-  <!-- Hero -->
   <section class="hero">
     <div class="hero-split"></div>
     <div class="hero-grid"></div>
-
     <div class="hero-content">
       <div class="hero-eyebrow fade-in">Bot Designer for Discord · Utilities</div>
-
-      <h1 class="hero-title fade-in">
-        Build<br>
-        <span class="inverted">better</span><br>
-        bots.
-      </h1>
-
-      <p class="hero-sub fade-in">
-        Tools, generators, and utilities built for the BDFD community.
-        No fluff, just what you need.
-      </p>
-
+      <h1 class="hero-title fade-in">Build<br><span class="inverted">better</span><br>bots.</h1>
+      <p class="hero-sub fade-in">Tools, generators, and utilities built for the BDFD community. No fluff, just what you need.</p>
       <div class="hero-actions fade-in">
         <button class="btn-primary" onclick="showPage('tools')">Browse Tools</button>
-        <button class="btn-secondary" onclick="showPage('tools')">View ?card →</button>
+        <button class="btn-secondary" onclick="showPage('tools')">View all tools →</button>
       </div>
     </div>
-
     <div class="scroll-hint">scroll</div>
   </section>
-
-  <!-- Stats row -->
   <div class="stats-row">
-    <div class="stat-cell">
-      <div class="stat-num">01</div>
-      <div class="stat-label">Tools available</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Combinations</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-num">0$</div>
-      <div class="stat-label">Cost</div>
-    </div>
+    <div class="stat-cell"><div class="stat-num">03</div><div class="stat-label">Tools available</div></div>
+    <div class="stat-cell"><div class="stat-num">∞</div><div class="stat-label">Combinations</div></div>
+    <div class="stat-cell"><div class="stat-num">0$</div><div class="stat-label">Cost</div></div>
   </div>
-
   <footer>
     <div class="footer-left">BDFD Tools &nbsp;/&nbsp; Community Project</div>
     <div class="footer-right">Not affiliated with Bot Designer for Discord</div>
   </footer>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PAGE: TOOLS LIST
-══════════════════════════════════════════ -->
+<!-- ══ PAGE: TOOLS LIST ══ -->
 <div id="page-tools" class="page">
   <div class="page-header">
     <div class="page-header-eyebrow">Utility Belt</div>
     <h2 class="page-header-title">Tools</h2>
   </div>
-
   <div class="tools-grid">
+
     <div class="tool-card" onclick="showPage('card-tool')">
       <div class="tool-tag">Image Generator · v1</div>
       <div class="tool-name"><code>?card</code></div>
-      <div class="tool-desc">
-        Generate a customizable Discord profile card image with stats, badges, themes, and more. All params optional.
-      </div>
+      <div class="tool-desc">Generate a customizable Discord profile card image with stats, badges, themes, and more. All params optional.</div>
       <div class="tool-chip-row">
         <span class="chip white">themes</span>
         <span class="chip white">badges</span>
@@ -841,270 +348,847 @@
       <div class="tool-arrow">↗</div>
     </div>
 
-    <!-- Placeholder for future tools -->
-    <div class="tool-card" style="opacity:0.3; cursor:default; pointer-events:none;">
+    <div class="tool-card" onclick="showPage('perm-tool')">
+      <div class="tool-tag">Utility · v1</div>
+      <div class="tool-name">Permission<br>Calculator</div>
+      <div class="tool-desc">Build Discord invite links with precise permission bits for your bot application. Toggle permissions, get the value and a ready-to-use OAuth2 URL.</div>
+      <div class="tool-chip-row">
+        <span class="chip white">all permissions</span>
+        <span class="chip white">invite URL</span>
+        <span class="chip white">bitfield</span>
+        <span class="chip">client ID</span>
+      </div>
+      <div class="tool-arrow">↗</div>
+    </div>
+
+    <div class="tool-card" onclick="showPage('checker-tool')">
+      <div class="tool-tag">Debugger · v1</div>
+      <div class="tool-name">BDFD Code<br>Checker</div>
+      <div class="tool-desc">Paste your BDFD code and instantly detect missing brackets, wrong argument counts, unclosed functions, and common syntax mistakes.</div>
+      <div class="tool-chip-row">
+        <span class="chip white">bracket check</span>
+        <span class="chip white">arg validation</span>
+        <span class="chip white">line numbers</span>
+        <span class="chip">error reasons</span>
+      </div>
+      <div class="tool-arrow">↗</div>
+    </div>
+
+    <div class="tool-card" style="opacity:0.3;cursor:default;pointer-events:none;">
       <div class="tool-tag">Coming Soon</div>
-      <div class="tool-name" style="font-size:1.2rem; color:#333;">More tools on the way</div>
+      <div class="tool-name" style="font-size:1.2rem;color:#333;">More tools on the way</div>
       <div class="tool-desc">Have an idea? Contribute to the project.</div>
     </div>
   </div>
-
   <footer>
     <div class="footer-left">BDFD Tools</div>
     <div class="footer-right">Not affiliated with Bot Designer for Discord</div>
   </footer>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PAGE: ?CARD TOOL DETAIL
-══════════════════════════════════════════ -->
+<!-- ══ PAGE: ?CARD ══ -->
 <div id="page-card-tool" class="page">
   <div class="tool-detail-header">
     <div>
       <button class="back-btn" onclick="showPage('tools')">← Back to tools</button>
       <div class="page-header-eyebrow">Image Generator</div>
-      <h2 class="page-header-title" style="font-size: clamp(2rem,5vw,4rem);">?card</h2>
+      <h2 class="page-header-title" style="font-size:clamp(2rem,5vw,4rem);">?card</h2>
     </div>
     <div style="text-align:right;">
       <div class="tool-tag" style="margin-bottom:8px;">All params optional</div>
       <div style="font-family:var(--font-mono);font-size:0.65rem;color:#555;">Use %23 instead of # in URLs</div>
     </div>
   </div>
-
   <div class="detail-content">
-
-    <!-- LEFT: Params -->
     <div>
-
-      <!-- Identity -->
       <div class="param-section">
         <div class="param-section-title">Identity</div>
-
-        <div class="param-row">
-          <div class="param-name">username</div>
-          <div class="param-desc">Display name shown on the card. <em>Default: "User"</em></div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">user</div>
-          <div class="param-desc">Numeric Discord user ID shown as <em>#id</em></div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">avatar</div>
-          <div class="param-desc">HTTPS URL for the avatar image. Used as fallback if another source fails.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">title</div>
-          <div class="param-desc">Small label beneath the name. <em>e.g. Admin, Mod</em></div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">bio</div>
-          <div class="param-desc">Short bio text. Max 120 chars, displays across 2 lines.</div>
-        </div>
+        <div class="param-row"><div class="param-name">username</div><div class="param-desc">Display name shown on the card. <em>Default: "User"</em></div></div>
+        <div class="param-row"><div class="param-name">user</div><div class="param-desc">Numeric Discord user ID shown as <em>#id</em></div></div>
+        <div class="param-row"><div class="param-name">avatar</div><div class="param-desc">HTTPS URL for the avatar image.</div></div>
+        <div class="param-row"><div class="param-name">title</div><div class="param-desc">Small label beneath the name. <em>e.g. Admin, Mod</em></div></div>
+        <div class="param-row"><div class="param-name">bio</div><div class="param-desc">Short bio text. Max 120 chars.</div></div>
       </div>
-
-      <!-- Appearance -->
       <div class="param-section">
         <div class="param-section-title">Appearance</div>
-
-        <div class="param-row">
-          <div class="param-name">theme</div>
-          <div class="param-desc">Card color theme. <em>dark · cyberpunk · pastel · minimal</em> (default: dark)</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">color</div>
-          <div class="param-desc">Hex accent color. Use <em>%23</em> instead of <em>#</em> in the URL. Accepts <em>#rgb</em> or <em>#rrggbb</em>.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">bg</div>
-          <div class="param-desc">URL of a custom background image.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">overlay</div>
-          <div class="param-desc">Overlay on top of background. <em>dark · light · none</em> (default: dark)</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">blur</div>
-          <div class="param-desc">Background blur amount. <em>0–20</em> (default: 0)</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">glow</div>
-          <div class="param-desc">Enable glow effect around accent. <em>true / false</em> (default: false)</div>
-        </div>
+        <div class="param-row"><div class="param-name">theme</div><div class="param-desc">Card color theme. <em>dark · cyberpunk · pastel · minimal</em></div></div>
+        <div class="param-row"><div class="param-name">color</div><div class="param-desc">Hex accent. Use <em>%23</em> instead of <em>#</em>.</div></div>
+        <div class="param-row"><div class="param-name">bg</div><div class="param-desc">URL of a custom background image.</div></div>
+        <div class="param-row"><div class="param-name">overlay</div><div class="param-desc"><em>dark · light · none</em> (default: dark)</div></div>
+        <div class="param-row"><div class="param-name">blur</div><div class="param-desc">Background blur. <em>0–20</em></div></div>
+        <div class="param-row"><div class="param-name">glow</div><div class="param-desc">Glow effect. <em>true / false</em></div></div>
       </div>
-
-      <!-- Layout -->
       <div class="param-section">
         <div class="param-section-title">Layout</div>
-
-        <div class="param-row">
-          <div class="param-name">style</div>
-          <div class="param-desc">
-            Card layout/size.<br>
-            <em>full</em> — 620×200px (default)<br>
-            <em>compact</em> — 420×130px<br>
-            <em>banner</em> — 680×260px
-          </div>
-        </div>
+        <div class="param-row"><div class="param-name">style</div><div class="param-desc"><em>full</em> 620×200px · <em>compact</em> 420×130px · <em>banner</em> 680×260px</div></div>
       </div>
-
-      <!-- Stats -->
       <div class="param-section">
-        <div class="param-section-title">Stats (optional)</div>
-
-        <div class="param-row">
-          <div class="param-name">level</div>
-          <div class="param-desc">Enables the XP progress bar when set.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">xp</div>
-          <div class="param-desc">Current XP value for the progress bar.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">xpmax</div>
-          <div class="param-desc">Max XP. If omitted, bar shows at ~65%.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">rank</div>
-          <div class="param-desc">Shown as <em>#n</em> on the card.</div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">messages</div>
-          <div class="param-desc">Message count, auto-formatted. <em>1200 → 1.2K</em></div>
-        </div>
-        <div class="param-row">
-          <div class="param-name">streak</div>
-          <div class="param-desc">Activity streak. <em>e.g. 30d</em></div>
-        </div>
+        <div class="param-section-title">Stats</div>
+        <div class="param-row"><div class="param-name">level</div><div class="param-desc">Enables the XP progress bar.</div></div>
+        <div class="param-row"><div class="param-name">xp</div><div class="param-desc">Current XP value.</div></div>
+        <div class="param-row"><div class="param-name">xpmax</div><div class="param-desc">Max XP for the progress bar.</div></div>
+        <div class="param-row"><div class="param-name">rank</div><div class="param-desc">Shown as <em>#n</em> on the card.</div></div>
+        <div class="param-row"><div class="param-name">messages</div><div class="param-desc">Auto-formatted. <em>1200 → 1.2K</em></div></div>
+        <div class="param-row"><div class="param-name">streak</div><div class="param-desc">Activity streak. <em>e.g. 30d</em></div></div>
       </div>
-
-      <!-- Badges -->
       <div class="param-section">
         <div class="param-section-title">Badges</div>
-
-        <div class="param-row">
-          <div class="param-name">badges</div>
-          <div class="param-desc">
-            Comma-separated list, max 8.<br>
-            <em>vip, mod, booster, dev, staff, bot, early, verified, premium, partner</em>
-          </div>
-        </div>
-
+        <div class="param-row"><div class="param-name">badges</div><div class="param-desc">Comma-separated, max 8. <em>vip, mod, booster, dev, staff, bot, early, verified, premium, partner</em></div></div>
         <div class="tool-chip-row" style="margin-top:16px;">
-          <span class="chip white">vip</span>
-          <span class="chip white">mod</span>
-          <span class="chip white">booster</span>
-          <span class="chip white">dev</span>
-          <span class="chip white">staff</span>
-          <span class="chip white">bot</span>
-          <span class="chip white">early</span>
-          <span class="chip white">verified</span>
-          <span class="chip white">premium</span>
-          <span class="chip white">partner</span>
+          <span class="chip white">vip</span><span class="chip white">mod</span><span class="chip white">booster</span><span class="chip white">dev</span><span class="chip white">staff</span><span class="chip white">bot</span><span class="chip white">early</span><span class="chip white">verified</span><span class="chip white">premium</span><span class="chip white">partner</span>
         </div>
       </div>
     </div>
-
-    <!-- RIGHT: Preview / Builder -->
     <div class="preview-panel">
       <div class="preview-label">URL Structure</div>
       <div class="preview-box">
         <div class="preview-url">
-          <strong>Base URL:</strong><br>
-          bdfd-tools.netlify.app/card<br><br>
-          <strong>Example:</strong><br>
-          /card?username=Ash&level=5&xp=340&xpmax=500&badges=dev,verified&theme=dark&glow=true&color=%2300ffcc
+          <strong>Base URL:</strong><br>bdfd-tools.netlify.app/card<br><br>
+          <strong>Example:</strong><br>/card?username=Ash&level=5&xp=340&xpmax=500&badges=dev,verified&theme=dark&glow=true&color=%2300ffcc
         </div>
       </div>
-
       <div class="build-link-label">Quick Builder</div>
       <div class="builder-inputs">
-        <input class="builder-input" id="b-username" placeholder="username" />
-        <input class="builder-input" id="b-user" placeholder="user (numeric ID)" />
-        <input class="builder-input" id="b-title" placeholder="title (e.g. Admin)" />
-        <input class="builder-input" id="b-bio" placeholder="bio (max 120 chars)" />
-        <input class="builder-input" id="b-level" placeholder="level" />
-        <input class="builder-input" id="b-xp" placeholder="xp" />
-        <input class="builder-input" id="b-xpmax" placeholder="xpmax" />
-        <input class="builder-input" id="b-rank" placeholder="rank" />
-        <input class="builder-input" id="b-badges" placeholder="badges (comma separated)" />
-        <input class="builder-input" id="b-theme" placeholder="theme: dark/cyberpunk/pastel/minimal" />
-        <input class="builder-input" id="b-color" placeholder="color (hex, e.g. #ff0099)" />
-        <input class="builder-input" id="b-style" placeholder="style: full/compact/banner" />
-        <input class="builder-input" id="b-blur" placeholder="blur (0-20)" />
-        <input class="builder-input" id="b-glow" placeholder="glow: true/false" />
-        <input class="builder-input" id="b-baseurl" placeholder="Base URL (bdfd-tools.netlify.app/card)" />
+        <input class="builder-input" id="b-username" placeholder="username"/>
+        <input class="builder-input" id="b-user" placeholder="user (numeric ID)"/>
+        <input class="builder-input" id="b-title" placeholder="title (e.g. Admin)"/>
+        <input class="builder-input" id="b-bio" placeholder="bio (max 120 chars)"/>
+        <input class="builder-input" id="b-level" placeholder="level"/>
+        <input class="builder-input" id="b-xp" placeholder="xp"/>
+        <input class="builder-input" id="b-xpmax" placeholder="xpmax"/>
+        <input class="builder-input" id="b-rank" placeholder="rank"/>
+        <input class="builder-input" id="b-badges" placeholder="badges (comma separated)"/>
+        <input class="builder-input" id="b-theme" placeholder="theme: dark/cyberpunk/pastel/minimal"/>
+        <input class="builder-input" id="b-color" placeholder="color (hex, e.g. #ff0099)"/>
+        <input class="builder-input" id="b-style" placeholder="style: full/compact/banner"/>
+        <input class="builder-input" id="b-blur" placeholder="blur (0-20)"/>
+        <input class="builder-input" id="b-glow" placeholder="glow: true/false"/>
+        <input class="builder-input" id="b-baseurl" placeholder="Base URL (bdfd-tools.netlify.app/card)"/>
         <button class="builder-generate" onclick="buildURL()">Generate URL</button>
         <div class="generated-url" id="generated-url"></div>
       </div>
     </div>
   </div>
-
   <footer>
     <div class="footer-left">BDFD Tools · ?card</div>
     <div class="footer-right">All params optional</div>
   </footer>
 </div>
 
+<!-- ══ PAGE: PERMISSION CALCULATOR ══ -->
+<div id="page-perm-tool" class="page">
+  <div class="tool-detail-header">
+    <div>
+      <button class="back-btn" onclick="showPage('tools')">← Back to tools</button>
+      <div class="page-header-eyebrow">Utility</div>
+      <h2 class="page-header-title" style="font-size:clamp(2rem,5vw,4rem);">Permission Calculator</h2>
+    </div>
+    <div style="text-align:right;">
+      <div class="tool-tag" style="margin-bottom:8px;">Discord OAuth2 Invite Builder</div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:#555;">For bot application invites</div>
+    </div>
+  </div>
+
+  <div class="perm-layout">
+    <!-- LEFT: Permission toggles -->
+    <div>
+      <div class="perm-select-row">
+        <button class="perm-sel-btn" onclick="selectAllPerms(true)">Select All</button>
+        <button class="perm-sel-btn" onclick="selectAllPerms(false)">Clear All</button>
+        <button class="perm-sel-btn" onclick="selectCommonPerms()">Common Set</button>
+      </div>
+      <div class="perm-categories" id="perm-categories"></div>
+    </div>
+
+    <!-- RIGHT: Result -->
+    <div class="perm-result-panel">
+      <div class="preview-label">Permission Value</div>
+      <div class="perm-value-box">
+        <div class="perm-value-num" id="perm-decimal">0</div>
+        <div class="perm-value-hex" id="perm-hex">0x00000000</div>
+      </div>
+
+      <div class="preview-label" style="margin-top:16px;">Active Permissions</div>
+      <div class="perm-badge-row" id="perm-active-badges">
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:#2a2a2a;">none selected</span>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div class="preview-label">Invite URL Builder</div>
+        <input class="perm-client-input" id="perm-client-id" placeholder="Your Bot Client ID (Application ID)" oninput="updateInviteURL()"/>
+        <div class="perm-invite-box">
+          <div class="perm-invite-label">Generated Invite URL</div>
+          <div class="perm-invite-url" id="perm-invite-url">
+            <strong>discord.com/api/oauth2/authorize</strong>?client_id=<span id="iu-client">YOUR_ID</span>&permissions=<span id="iu-perms">0</span>&scope=bot+applications.commands
+          </div>
+        </div>
+        <button class="perm-copy-btn" onclick="copyInviteURL()">Copy Invite URL</button>
+        <div class="copy-feedback" id="copy-feedback">Copied to clipboard</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">BDFD Tools · Permission Calculator</div>
+    <div class="footer-right">Discord API v10</div>
+  </footer>
+</div>
+
+<!-- ══ PAGE: BDFD CODE CHECKER ══ -->
+<div id="page-checker-tool" class="page">
+  <div class="tool-detail-header">
+    <div>
+      <button class="back-btn" onclick="showPage('tools')">← Back to tools</button>
+      <div class="page-header-eyebrow">Debugger</div>
+      <h2 class="page-header-title" style="font-size:clamp(2rem,5vw,4rem);">BDFD Code Checker</h2>
+    </div>
+    <div style="text-align:right;">
+      <div class="tool-tag" style="margin-bottom:8px;">Syntax Validator</div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:#555;">Paste your $function[] code</div>
+    </div>
+  </div>
+
+  <div class="checker-layout">
+    <!-- LEFT: Editor -->
+    <div class="code-editor-wrap">
+      <div class="code-editor-label">Your BDFD Code</div>
+      <textarea class="code-editor" id="bdfd-code" placeholder="$nomention&#10;$sendMessage[Hello, $username[]!]&#10;$addField[My Field;Some value;false]&#10;&#10;Paste your BDFD code here..."></textarea>
+      <div class="btn-row">
+        <button class="check-btn" onclick="checkBDFDCode()">Check Code</button>
+        <button class="clear-btn" onclick="clearChecker()">Clear</button>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div class="checker-info">
+          <div class="checker-info-title">What this checks</div>
+          <div class="checker-info-row">
+            <div class="checker-badge" style="background:#8c4a4a;"></div>
+            <div class="checker-info-text">Unmatched brackets — unclosed <code style="font-size:0.72rem;color:#555;">[ ]</code> or mismatched pairs</div>
+          </div>
+          <div class="checker-info-row">
+            <div class="checker-badge" style="background:#8c6a2a;"></div>
+            <div class="checker-info-text">Wrong argument count — too few or too many args for known functions</div>
+          </div>
+          <div class="checker-info-row">
+            <div class="checker-badge" style="background:#4a6a8c;"></div>
+            <div class="checker-info-text">Unknown or misspelled function names</div>
+          </div>
+          <div class="checker-info-row">
+            <div class="checker-badge" style="background:#555;"></div>
+            <div class="checker-info-text">Common warnings — empty function calls, nested issues</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="results-panel">
+      <div class="code-editor-label">Results</div>
+      <div class="result-status idle" id="checker-status">
+        <div class="status-dot idle"></div>
+        <span>Waiting for code...</span>
+      </div>
+      <div id="checker-results"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">BDFD Tools · Code Checker</div>
+    <div class="footer-right">Common functions only — not exhaustive</div>
+  </footer>
+</div>
+
 <script>
-  // ── Page routing ──
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    window.scrollTo(0, 0);
-  }
+// ══════════════════════════════════════════
+// PAGE ROUTING
+// ══════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
 
-  // ── Loader ──
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const loader = document.getElementById('loader');
-      loader.classList.add('done');
-      setTimeout(() => loader.remove(), 600);
-    }, 2800);
+// ══════════════════════════════════════════
+// LOADER
+// ══════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    loader.classList.add('done');
+    setTimeout(() => loader.remove(), 600);
+  }, 2800);
+});
+
+// ══════════════════════════════════════════
+// ?CARD URL BUILDER
+// ══════════════════════════════════════════
+function buildURL() {
+  const base = document.getElementById('b-baseurl').value.trim() || 'your-api.com/card';
+  const params = [
+    ['username','b-username'],['user','b-user'],['title','b-title'],['bio','b-bio'],
+    ['level','b-level'],['xp','b-xp'],['xpmax','b-xpmax'],['rank','b-rank'],
+    ['badges','b-badges'],['theme','b-theme'],['color','b-color'],['style','b-style'],
+    ['blur','b-blur'],['glow','b-glow'],
+  ];
+  const parts = [];
+  params.forEach(([key, id]) => {
+    const val = document.getElementById(id).value.trim();
+    if (val) {
+      let encoded = key === 'color' ? val.replace('#', '%23') : encodeURIComponent(val);
+      parts.push(`${key}=${encoded}`);
+    }
   });
+  const url = `${base}${parts.length ? '?' + parts.join('&') : ''}`;
+  const el = document.getElementById('generated-url');
+  el.textContent = url;
+  el.classList.add('show');
+  navigator.clipboard.writeText(url).catch(() => {});
+}
 
-  // ── URL Builder ──
-  function buildURL() {
-    const base = document.getElementById('b-baseurl').value.trim() || 'your-api.com/card';
-    const params = [
-      ['username', 'b-username'],
-      ['user', 'b-user'],
-      ['title', 'b-title'],
-      ['bio', 'b-bio'],
-      ['level', 'b-level'],
-      ['xp', 'b-xp'],
-      ['xpmax', 'b-xpmax'],
-      ['rank', 'b-rank'],
-      ['badges', 'b-badges'],
-      ['theme', 'b-theme'],
-      ['color', 'b-color'],
-      ['style', 'b-style'],
-      ['blur', 'b-blur'],
-      ['glow', 'b-glow'],
-    ];
+// ══════════════════════════════════════════
+// PERMISSION CALCULATOR
+// ══════════════════════════════════════════
+const PERMISSIONS = [
+  {
+    cat: 'General Server',
+    perms: [
+      { name: 'Administrator', bit: 0x8n, desc: 'Bypasses all other permissions. Grants all permissions.', common: false },
+      { name: 'View Audit Log', bit: 0x80n, desc: 'View entries in the guild\'s audit log.', common: false },
+      { name: 'Manage Guild', bit: 0x20n, desc: 'Edit server settings, name, region, etc.', common: false },
+      { name: 'Manage Roles', bit: 0x10000000n, desc: 'Create, edit, and delete roles below the bot\'s role.', common: false },
+      { name: 'Manage Channels', bit: 0x10n, desc: 'Create, edit, delete channels.', common: false },
+      { name: 'Manage Webhooks', bit: 0x20000000n, desc: 'Create, edit and delete webhooks.', common: false },
+      { name: 'Manage Expressions', bit: 0x40000000n, desc: 'Create and manage emojis, stickers, and sounds.', common: false },
+      { name: 'View Server Insights', bit: 0x80000n, desc: 'View the server\'s insights (analytics).', common: false },
+      { name: 'Moderate Members', bit: 0x400000000n, desc: 'Timeout members in the server.', common: true },
+    ]
+  },
+  {
+    cat: 'Membership',
+    perms: [
+      { name: 'Kick Members', bit: 0x2n, desc: 'Remove members from the server.', common: true },
+      { name: 'Ban Members', bit: 0x4n, desc: 'Permanently ban members from the server.', common: true },
+      { name: 'Create Instant Invite', bit: 0x1n, desc: 'Create invites to the server.', common: false },
+      { name: 'Change Nickname', bit: 0x4000000n, desc: 'Change own nickname.', common: false },
+      { name: 'Manage Nicknames', bit: 0x8000000n, desc: 'Change nicknames of other members.', common: false },
+    ]
+  },
+  {
+    cat: 'Text Channels',
+    perms: [
+      { name: 'Send Messages', bit: 0x800n, desc: 'Send messages in text channels.', common: true },
+      { name: 'Send Messages in Threads', bit: 0x4000000000n, desc: 'Send messages in threads.', common: true },
+      { name: 'Create Public Threads', bit: 0x800000000n, desc: 'Create public threads.', common: false },
+      { name: 'Create Private Threads', bit: 0x1000000000n, desc: 'Create private threads.', common: false },
+      { name: 'Embed Links', bit: 0x4000n, desc: 'Embed links and show previews.', common: true },
+      { name: 'Attach Files', bit: 0x8000n, desc: 'Attach files to messages.', common: true },
+      { name: 'Add Reactions', bit: 0x40n, desc: 'Add reactions to messages.', common: true },
+      { name: 'Use External Emoji', bit: 0x40000n, desc: 'Use emojis from other servers.', common: true },
+      { name: 'Use External Stickers', bit: 0x2000000000n, desc: 'Use stickers from other servers.', common: false },
+      { name: 'Mention @everyone', bit: 0x20000n, desc: 'Mention @everyone, @here and all roles.', common: false },
+      { name: 'Manage Messages', bit: 0x2000n, desc: 'Delete messages and pin messages.', common: true },
+      { name: 'Manage Threads', bit: 0x400000000n, desc: 'Delete and archive threads.', common: false },
+      { name: 'Read Message History', bit: 0x10000n, desc: 'Read previously sent messages.', common: true },
+      { name: 'Send TTS Messages', bit: 0x1000n, desc: 'Send text-to-speech messages.', common: false },
+      { name: 'Use Application Commands', bit: 0x80000000n, desc: 'Use slash commands and other app commands.', common: true },
+    ]
+  },
+  {
+    cat: 'Voice Channels',
+    perms: [
+      { name: 'Connect', bit: 0x100000n, desc: 'Connect to voice channels.', common: false },
+      { name: 'Speak', bit: 0x200000n, desc: 'Speak in voice channels.', common: false },
+      { name: 'Video', bit: 0x200n, desc: 'Share video in voice channels.', common: false },
+      { name: 'Mute Members', bit: 0x400000n, desc: 'Mute members in voice channels.', common: false },
+      { name: 'Deafen Members', bit: 0x800000n, desc: 'Deafen members in voice channels.', common: false },
+      { name: 'Move Members', bit: 0x1000000n, desc: 'Move members between voice channels.', common: false },
+      { name: 'Use Voice Activity', bit: 0x2000000n, desc: 'Use voice activity detection (non-PTT).', common: false },
+      { name: 'Priority Speaker', bit: 0x100n, desc: 'Get priority in voice channels.', common: false },
+    ]
+  },
+  {
+    cat: 'Channel Access',
+    perms: [
+      { name: 'View Channels', bit: 0x400n, desc: 'View channels that this permission is enabled for.', common: true },
+    ]
+  }
+];
 
-    const parts = [];
-    params.forEach(([key, id]) => {
-      const val = document.getElementById(id).value.trim();
-      if (val) {
-        let encoded = encodeURIComponent(val).replace(/%23/g, '%2523');
-        // For color, replace # with %23
-        if (key === 'color') {
-          encoded = val.replace('#', '%23');
-        } else {
-          encoded = encodeURIComponent(val);
-        }
-        parts.push(`${key}=${encoded}`);
-      }
+let activePerms = new Set();
+
+function buildPermUI() {
+  const container = document.getElementById('perm-categories');
+  PERMISSIONS.forEach((cat, ci) => {
+    const catEl = document.createElement('div');
+    catEl.className = 'perm-category';
+
+    const header = document.createElement('div');
+    header.className = 'perm-cat-header';
+    header.innerHTML = `<span>${cat.cat}</span><span id="cat-count-${ci}" style="color:#222">0</span>`;
+    header.onclick = () => body.classList.toggle('open');
+
+    const body = document.createElement('div');
+    body.className = 'perm-cat-body open';
+
+    cat.perms.forEach(perm => {
+      const item = document.createElement('div');
+      item.className = 'perm-item';
+      item.innerHTML = `
+        <div class="perm-item-left">
+          <div class="perm-item-name">${perm.name}</div>
+          <div class="perm-item-desc">${perm.desc}</div>
+        </div>
+        <div class="perm-toggle" id="toggle-${perm.bit}" onclick="togglePerm(${perm.bit}n, ${ci})"></div>
+      `;
+      body.appendChild(item);
     });
 
-    const url = `${base}${parts.length ? '?' + parts.join('&') : ''}`;
-    const el = document.getElementById('generated-url');
-    el.textContent = url;
-    el.classList.add('show');
+    catEl.appendChild(header);
+    catEl.appendChild(body);
+    container.appendChild(catEl);
+  });
+}
 
-    // Copy to clipboard
-    navigator.clipboard.writeText(url).catch(() => {});
+function togglePerm(bit, ci) {
+  if (activePerms.has(bit)) {
+    activePerms.delete(bit);
+  } else {
+    activePerms.add(bit);
   }
+  updatePermUI();
+}
+
+function updatePermUI() {
+  // Update toggles
+  PERMISSIONS.forEach((cat, ci) => {
+    let count = 0;
+    cat.perms.forEach(perm => {
+      const toggle = document.getElementById(`toggle-${perm.bit}`);
+      if (!toggle) return;
+      const on = activePerms.has(perm.bit);
+      toggle.classList.toggle('on', on);
+      if (on) count++;
+    });
+    const countEl = document.getElementById(`cat-count-${ci}`);
+    if (countEl) countEl.textContent = count > 0 ? count : '';
+    if (countEl) countEl.style.color = count > 0 ? '#555' : '#222';
+  });
+
+  // Compute total
+  let total = 0n;
+  activePerms.forEach(bit => total |= bit);
+
+  document.getElementById('perm-decimal').textContent = total.toString();
+  document.getElementById('perm-hex').textContent = '0x' + total.toString(16).toUpperCase().padStart(8, '0');
+
+  // Active badges
+  const badgeRow = document.getElementById('perm-active-badges');
+  badgeRow.innerHTML = '';
+  if (activePerms.size === 0) {
+    badgeRow.innerHTML = '<span style="font-family:var(--font-mono);font-size:0.65rem;color:#2a2a2a;">none selected</span>';
+  } else {
+    PERMISSIONS.forEach(cat => {
+      cat.perms.forEach(perm => {
+        if (activePerms.has(perm.bit)) {
+          const chip = document.createElement('span');
+          chip.className = 'perm-active-chip';
+          chip.textContent = perm.name;
+          badgeRow.appendChild(chip);
+        }
+      });
+    });
+  }
+
+  updateInviteURL();
+}
+
+function updateInviteURL() {
+  let total = 0n;
+  activePerms.forEach(bit => total |= bit);
+  const clientId = document.getElementById('perm-client-id').value.trim() || 'YOUR_ID';
+  document.getElementById('iu-client').textContent = clientId;
+  document.getElementById('iu-perms').textContent = total.toString();
+}
+
+function copyInviteURL() {
+  let total = 0n;
+  activePerms.forEach(bit => total |= bit);
+  const clientId = document.getElementById('perm-client-id').value.trim() || 'YOUR_ID';
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=${total.toString()}&scope=bot+applications.commands`;
+  navigator.clipboard.writeText(url).then(() => {
+    const fb = document.getElementById('copy-feedback');
+    fb.classList.add('show');
+    setTimeout(() => fb.classList.remove('show'), 2000);
+  }).catch(() => {});
+}
+
+function selectAllPerms(on) {
+  activePerms.clear();
+  if (on) {
+    PERMISSIONS.forEach(cat => cat.perms.forEach(p => activePerms.add(p.bit)));
+  }
+  updatePermUI();
+}
+
+function selectCommonPerms() {
+  activePerms.clear();
+  PERMISSIONS.forEach(cat => cat.perms.forEach(p => { if (p.common) activePerms.add(p.bit); }));
+  updatePermUI();
+}
+
+buildPermUI();
+
+// ══════════════════════════════════════════
+// BDFD CODE CHECKER
+// ══════════════════════════════════════════
+
+// Known BDFD functions with [min, max] arg counts (-1 = variadic/unlimited)
+const BDFD_FUNCTIONS = {
+  // Messages
+  '$sendMessage': [1, 2],
+  '$sendEmbedMessage': [1, -1],
+  '$editMessage': [2, 3],
+  '$deleteMessage': [0, 2],
+  '$pinMessage': [0, 2],
+  '$reply': [1, 2],
+  // Embeds
+  '$title': [1, 2],
+  '$description': [1, 1],
+  '$footer': [1, 2],
+  '$color': [1, 1],
+  '$thumbnail': [1, 1],
+  '$image': [1, 1],
+  '$author': [1, 3],
+  '$addField': [2, 3],
+  '$timestamp': [0, 1],
+  '$url': [1, 1],
+  // User info
+  '$username': [0, 1],
+  '$nickname': [0, 1],
+  '$authorID': [0, 0],
+  '$userID': [0, 1],
+  '$authorAvatar': [0, 1],
+  '$userAvatar': [0, 1],
+  '$userTag': [0, 1],
+  '$discriminator': [0, 1],
+  '$createdAt': [0, 2],
+  '$joinedAt': [0, 2],
+  '$roles': [0, 3],
+  '$roleCount': [0, 1],
+  '$topRole': [0, 1],
+  // Server
+  '$serverName': [0, 1],
+  '$serverID': [0, 0],
+  '$serverIcon': [0, 1],
+  '$memberCount': [0, 1],
+  '$channelCount': [0, 1],
+  // Channel
+  '$channelID': [0, 1],
+  '$channelName': [0, 1],
+  '$channelTopic': [0, 1],
+  // Math / string
+  '$math': [1, 1],
+  '$sum': [2, -1],
+  '$multi': [2, -1],
+  '$sub': [2, -1],
+  '$div': [2, -1],
+  '$random': [2, 2],
+  '$randomText': [1, -1],
+  '$charCount': [1, 1],
+  '$toLowercase': [1, 1],
+  '$toUppercase': [1, 1],
+  '$trim': [1, 1],
+  '$split': [2, 2],
+  '$splitText': [2, 3],
+  '$replaceText': [3, 3],
+  '$startsWith': [2, 2],
+  '$endsWith': [2, 2],
+  '$contains': [2, 2],
+  '$numberFormat': [1, 2],
+  // Variables
+  '$setVar': [2, 3],
+  '$getVar': [1, 2],
+  '$setUserVar': [2, 3],
+  '$getUserVar': [1, 2],
+  '$setServerVar': [2, 3],
+  '$getServerVar': [1, 2],
+  '$globalUserVar': [1, 2],
+  '$setGlobalUserVar': [2, 3],
+  // Control
+  '$if': [3, 3],
+  '$elseif': [3, 3],
+  '$else': [0, 0],
+  '$endif': [0, 0],
+  '$loop': [1, 3],
+  '$endLoop': [0, 0],
+  // Misc
+  '$nomention': [0, 0],
+  '$mentionedUsers': [0, 2],
+  '$mentioned': [1, 2],
+  '$args': [0, 2],
+  '$argsCount': [0, 0],
+  '$prefix': [0, 1],
+  '$botID': [0, 0],
+  '$botName': [0, 0],
+  '$botAvatar': [0, 0],
+  '$wait': [1, 1],
+  '$stop': [0, 0],
+  '$error': [0, 0],
+  '$embedSuppressor': [0, 1],
+  '$suppress': [0, 0],
+  '$message': [0, 1],
+  '$messageID': [0, 1],
+  '$messageLink': [0, 2],
+  '$addButton': [3, 6],
+  '$addSelectMenu': [3, -1],
+  '$onInteraction': [1, 1],
+  '$interactionData': [0, 0],
+  '$interactionID': [0, 0],
+  '$ephemeral': [0, 0],
+  '$defer': [0, 1],
+  '$editInteraction': [1, 1],
+  '$roleExists': [1, 2],
+  '$userExists': [1, 1],
+  '$channelExists': [1, 1],
+  '$addRole': [2, 2],
+  '$removeRole': [2, 2],
+  '$giveRole': [2, 3],
+  '$takeRole': [2, 3],
+  '$hasRole': [2, 3],
+  '$kick': [1, 2],
+  '$ban': [1, 3],
+  '$unban': [1, 1],
+  '$setTimeout': [2, 3],
+  '$dm': [2, 3],
+  '$webhook': [2, -1],
+  '$log': [1, 3],
+};
+
+// Common misspellings / near-misses
+const COMMON_MISSPELLINGS = {
+  '$sendmessage': '$sendMessage',
+  '$sendembed': '$sendEmbedMessage',
+  '$deletemessage': '$deleteMessage',
+  '$editmessage': '$editMessage',
+  '$addfield': '$addField',
+  '$servericon': '$serverIcon',
+  '$servername': '$serverName',
+  '$userAvatar': '$userAvatar',
+  '$username': '$username',
+  '$mentionedusers': '$mentionedUsers',
+  '$setnvar': '$setVar',
+  '$getvar': '$getVar',
+  '$setuservar': '$setUserVar',
+  '$getuservar': '$getUserVar',
+  '$setservervar': '$setServerVar',
+  '$getservervar': '$getServerVar',
+  '$hadrole': '$hasRole',
+  '$giverole': '$giveRole',
+  '$takerole': '$takeRole',
+  '$addrole': '$addRole',
+  '$removerole': '$removeRole',
+};
+
+function checkBDFDCode() {
+  const code = document.getElementById('bdfd-code').value;
+  const lines = code.split('\n');
+  const errors = [];
+
+  // 1. Check bracket balance per line AND globally
+  let openBrackets = 0;
+  let openLines = [];
+
+  lines.forEach((line, li) => {
+    const lineNum = li + 1;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '[') {
+        openBrackets++;
+        openLines.push(lineNum);
+      } else if (line[i] === ']') {
+        if (openBrackets === 0) {
+          errors.push({
+            type: 'err-bracket',
+            typeLabel: 'Bracket Error',
+            msg: `Unexpected closing bracket <code>]</code> with no matching opener.`,
+            detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+          });
+        } else {
+          openBrackets--;
+          openLines.pop();
+        }
+      }
+    }
+  });
+
+  if (openBrackets > 0) {
+    const linesStr = [...new Set(openLines.slice(-openBrackets))].join(', ');
+    errors.push({
+      type: 'err-bracket',
+      typeLabel: 'Bracket Error',
+      msg: `${openBrackets} unclosed bracket${openBrackets > 1 ? 's' : ''} <code>[</code> with no matching <code>]</code>.`,
+      detail: `Opened on line${openBrackets > 1 ? 's' : ''}: ${linesStr}`
+    });
+  }
+
+  // 2. Find all function calls and check args
+  const funcRegex = /(\$[a-zA-Z]+)(\[([^\[\]]*)\])?/g;
+  lines.forEach((line, li) => {
+    const lineNum = li + 1;
+    let match;
+    const re = /(\$[a-zA-Z]+)(\[([^\[\]]*(?:\[[^\]]*\][^\[\]]*)*)\])?/g;
+    while ((match = re.exec(line)) !== null) {
+      const funcName = match[1];
+      const hasBrackets = match[2] !== undefined;
+      const argsStr = match[3] || '';
+      const funcNameLower = funcName.toLowerCase();
+
+      // Check for misspellings first
+      if (!BDFD_FUNCTIONS[funcName] && COMMON_MISSPELLINGS[funcNameLower]) {
+        errors.push({
+          type: 'err-func',
+          typeLabel: 'Unknown Function',
+          msg: `<code>${escHtml(funcName)}</code> is not recognised. Did you mean <code>${escHtml(COMMON_MISSPELLINGS[funcNameLower])}</code>?`,
+          detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+        });
+        continue;
+      }
+
+      // Unknown function check (only flag $ functions we don't know at all)
+      const knownFunc = BDFD_FUNCTIONS[funcName];
+
+      if (!knownFunc) {
+        // Only warn for things that look like they might be typos of known funcs (skip truly custom ones)
+        // Skip warning entirely for unknown $functions — could be custom commands
+        continue;
+      }
+
+      const [minArgs, maxArgs] = knownFunc;
+
+      // Count args - split by ; but only at top level
+      let argCount = 0;
+      if (hasBrackets) {
+        if (argsStr.trim() === '') {
+          argCount = 0;
+        } else {
+          // Count semicolons at depth 0
+          let depth = 0;
+          let count = 1;
+          for (const ch of argsStr) {
+            if (ch === '[') depth++;
+            else if (ch === ']') depth--;
+            else if (ch === ';' && depth === 0) count++;
+          }
+          argCount = count;
+        }
+
+        // Arg count validation
+        if (minArgs !== -1 && maxArgs !== -1) {
+          if (argCount < minArgs) {
+            errors.push({
+              type: 'err-arg',
+              typeLabel: 'Missing Argument',
+              msg: `<code>${escHtml(funcName)}</code> expects at least <strong>${minArgs}</strong> argument${minArgs !== 1 ? 's' : ''}, but got <strong>${argCount}</strong>.`,
+              detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+            });
+          } else if (argCount > maxArgs) {
+            errors.push({
+              type: 'err-arg',
+              typeLabel: 'Too Many Arguments',
+              msg: `<code>${escHtml(funcName)}</code> accepts at most <strong>${maxArgs}</strong> argument${maxArgs !== 1 ? 's' : ''}, but got <strong>${argCount}</strong>.`,
+              detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+            });
+          }
+        } else if (maxArgs === -1 && argCount < minArgs) {
+          errors.push({
+            type: 'err-arg',
+            typeLabel: 'Missing Argument',
+            msg: `<code>${escHtml(funcName)}</code> expects at least <strong>${minArgs}</strong> argument${minArgs !== 1 ? 's' : ''}, but got <strong>${argCount}</strong>.`,
+            detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+          });
+        }
+      } else {
+        // No brackets at all — check if function needs them
+        if (minArgs > 0) {
+          errors.push({
+            type: 'err-arg',
+            typeLabel: 'Missing Brackets & Arguments',
+            msg: `<code>${escHtml(funcName)}</code> requires <strong>${minArgs}</strong> argument${minArgs !== 1 ? 's' : ''} but was called with no <code>[]</code>.`,
+            detail: `Line ${lineNum}: ${escHtml(line.trim())}`
+          });
+        }
+      }
+    }
+  });
+
+  // 3. Check for $if / $endif balance
+  let ifDepth = 0;
+  lines.forEach((line, li) => {
+    const trimmed = line.trim();
+    if (/^\$if\b/i.test(trimmed)) ifDepth++;
+    if (/^\$endif\b/i.test(trimmed)) ifDepth--;
+  });
+  if (ifDepth > 0) {
+    errors.push({ type: 'err-bracket', typeLabel: 'Logic Error', msg: `${ifDepth} <code>$if</code> block${ifDepth > 1 ? 's' : ''} without a matching <code>$endif</code>.`, detail: 'Every $if must be closed with $endif.' });
+  } else if (ifDepth < 0) {
+    errors.push({ type: 'err-bracket', typeLabel: 'Logic Error', msg: `${Math.abs(ifDepth)} extra <code>$endif</code> with no matching <code>$if</code>.`, detail: 'Remove the extra $endif.' });
+  }
+
+  // 4. $loop / $endLoop balance
+  let loopDepth = 0;
+  lines.forEach(line => {
+    const t = line.trim();
+    if (/^\$loop\b/i.test(t)) loopDepth++;
+    if (/^\$endLoop\b/i.test(t) || /^\$endloop\b/i.test(t)) loopDepth--;
+  });
+  if (loopDepth > 0) {
+    errors.push({ type: 'err-bracket', typeLabel: 'Logic Error', msg: `${loopDepth} <code>$loop</code> block${loopDepth > 1 ? 's' : ''} without a matching <code>$endLoop</code>.`, detail: 'Every $loop must be closed with $endLoop.' });
+  } else if (loopDepth < 0) {
+    errors.push({ type: 'err-bracket', typeLabel: 'Logic Error', msg: `${Math.abs(loopDepth)} extra <code>$endLoop</code> with no matching <code>$loop</code>.`, detail: 'Remove the extra $endLoop.' });
+  }
+
+  renderResults(errors, code.trim().length > 0);
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderResults(errors, hasCode) {
+  const statusEl = document.getElementById('checker-status');
+  const resultsEl = document.getElementById('checker-results');
+
+  if (!hasCode) {
+    statusEl.className = 'result-status idle';
+    statusEl.innerHTML = '<div class="status-dot idle"></div><span>No code to check.</span>';
+    resultsEl.innerHTML = '';
+    return;
+  }
+
+  if (errors.length === 0) {
+    statusEl.className = 'result-status ok';
+    statusEl.innerHTML = '<div class="status-dot ok"></div><span>No issues found — code looks clean!</span>';
+    resultsEl.innerHTML = `<div class="no-errors-box"><div class="check-icon">✓</div><p>All checks passed</p></div>`;
+    return;
+  }
+
+  statusEl.className = 'result-status error';
+  statusEl.innerHTML = `<div class="status-dot error"></div><span>${errors.length} issue${errors.length > 1 ? 's' : ''} detected</span>`;
+
+  resultsEl.innerHTML = '<div class="error-list">' + errors.map(e => `
+    <div class="error-item ${e.type}">
+      <div class="error-item-type">${e.typeLabel}</div>
+      <div class="error-item-msg">${e.msg}</div>
+      ${e.detail ? `<div class="error-item-detail">${escHtml(e.detail)}</div>` : ''}
+    </div>
+  `).join('') + '</div>';
+}
+
+function clearChecker() {
+  document.getElementById('bdfd-code').value = '';
+  document.getElementById('checker-status').className = 'result-status idle';
+  document.getElementById('checker-status').innerHTML = '<div class="status-dot idle"></div><span>Waiting for code...</span>';
+  document.getElementById('checker-results').innerHTML = '';
+}
 </script>
 </body>
 </html>
